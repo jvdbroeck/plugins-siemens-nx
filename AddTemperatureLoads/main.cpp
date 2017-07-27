@@ -29,6 +29,7 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 	while (!infile.eof()) {
 		/* read one line from the file and put the data in an array */
 		vector<int> data = MyNXSupportLib::ReadIntData(infile);
+		if (data.size() == 0) continue;
 
 		/* construct the node data array */
 		vector<double> node_data;
