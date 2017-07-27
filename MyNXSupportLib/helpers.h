@@ -1,6 +1,7 @@
 #ifndef MYNXSUPPORTLIB_HELPERS_H
 #define MYNXSUPPORTLIB_HELPERS_H
 
+#include <array>
 #include <string>
 #include <vector>
 
@@ -25,6 +26,10 @@ NXOpen::CAE::SetObject GetNodeObject(int node_id);
 
 void CreateAndAddLoad(std::string descriptor, std::string name, int label,
 						NXOpen::CAE::SetObject target_object, std::string target_property, NXOpen::Fields::FieldTable *target_table);
+
+void CreateAndAddCoupling(std::string descriptor, std::string name, int label,
+						  NXOpen::CAE::SetObject target_object_1, NXOpen::CAE::SetObject target_object_2,
+						  std::array<bool, 6> dof_enabled);
 
 void TimeDataVectorEnsureCorrectInterpolation(std::vector<double>& vector, double delta = 0.1);
 

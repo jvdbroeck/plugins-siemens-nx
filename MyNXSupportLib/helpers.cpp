@@ -7,6 +7,7 @@
 #include <NXOpen/CAE_SetManager.hxx>
 #include <NXOpen/CAE_PropertyTable.hxx>
 #include <NXOpen/CAE_FENode.hxx>
+#include <NXOpen/Fields_FieldExpression.hxx>
 
 using namespace std;
 using namespace NXOpen;
@@ -98,6 +99,32 @@ void CreateAndAddLoad(string descriptor, string name, int label,
 	/* create */
 	builder->TargetSetManager()->SetTargetSetMembers(0, vector<CAE::SetObject>(1, target_object));
 	builder->PropertyTable()->SetScalarFieldWrapperPropertyValue(target_property.c_str(), MyNXSupportLib::GetFieldManager()->CreateScalarFieldWrapperWithField(target_table, 1.0));
+
+	/* add */
+	builder->CommitAddBc();
+	builder->Destroy();
+}
+
+void CreateAndAddCoupling(string descriptor, string name, int label,
+						  CAE::SetObject target_object_1, CAE::SetObject target_object_2,
+						  array<bool, 6> dof_enabled) {
+	CAE::SimBCBuilder *builder = nx_simulation->CreateBcBuilderForConstraintDescriptor(descriptor.c_str(), name.c_str(), label);
+
+	/* create */
+	builder->TargetSetManager()->SetTargetSetMembers(0, vector<CAE::SetObject>(1, target_object_1));
+	builder->TargetSetManager()->SetTargetSetMembers(1, vector<CAE::SetObject>(1, target_object_2));
+
+	/* degree of freedom */
+	for (int i = 0; i < dof_enabled.size(); i++)
+		if (dof_enabled[i]) {
+			vector<Fields::FieldVariable *> independent_variables;
+			string name = StringConcat("DOF", i+1);
+
+			auto prop = builder->PropertyTable()->GetScalarFieldPropertyValue(name.c_str());
+			prop->EditFieldExpression("1", NULL, independent_variables, false);
+
+			builder->PropertyTable()->SetScalarFieldPropertyValue(name.c_str(), prop);
+		}
 
 	/* add */
 	builder->CommitAddBc();

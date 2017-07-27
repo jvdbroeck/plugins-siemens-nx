@@ -23,7 +23,8 @@ vector<int> ReadIntData(ifstream& input) {
 
 	/* create C-string to be used by strtok */
 	char *cline = new char[line.length()+1];
-	strcpy_s(cline, line.length(), line.c_str());
+	copy(line.begin(), line.end(), cline);
+	cline[line.length()] = '\0';
 
 	vector<int> data;
 
