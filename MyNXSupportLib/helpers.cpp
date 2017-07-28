@@ -27,8 +27,21 @@ Fields::FieldManager *GetFieldManager() {
 
 CAE::FEModelOccurrence *GetFEModelOccurrence() {
 	/* use caching because this code is HOT */
-	if (cached_occurrence == nullptr)
-		cached_occurrence = dynamic_cast<CAE::FEModelOccurrence *>(nx_part->FindObject("FEModelOccurrence[1]"));
+	if (cached_occurrence == nullptr) {
+		int counter = 1;
+
+		while (cached_occurrence == nullptr) {
+			try {
+				string name = StringConcat("FEModelOccurrence[", counter, "]");
+				cached_occurrence = dynamic_cast<CAE::FEModelOccurrence *>(nx_part->FindObject(name.c_str()));
+			} catch (...) {
+				/* model occurent not found... */
+			}
+
+			counter++;
+		}
+	}
+		
 
 	return cached_occurrence;
 }
