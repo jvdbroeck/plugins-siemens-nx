@@ -1,3 +1,9 @@
+/*	This plugin adds thermal steps to an existing solution.
+	Thermal steps are added for the following time steps (seconds):
+		1, 2, ..., 220, 240, 260, 280, 300,  400, 500, 750, 1000
+
+	For each of these time steps, a solution step is created with the name "Step - Thermal X" (where 'X' is the time).
+*/
 #include "MyNXSupportLib.h"
 
 #include <NXOpen/CAE_SimSolutionStep.hxx>

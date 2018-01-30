@@ -1,3 +1,16 @@
+/*	This plugin adds coupling between different nodes, based on the node ID.
+	The to-be-coupled nodes are to be supplied by an external file (1) as described below.
+
+	(1) file 'coupling.csv' in the same directory as the sim/prt files
+		Format:
+			<nodeX>,<nodeY>
+			<nodeX>,<nodeY>
+			...
+		Each line represents two nodes, nodeX and nodeY, to be coupled.
+
+	For each node, the following is added to the simulation:
+	(1) coupling, "Manual Coupling(xxx)", where 'xxx' is the 0-based unique identifier.
+*/
 #include "MyNXSupportLib.h"
 
 #include <NXOpen/CAE_SimSolutionStep.hxx>

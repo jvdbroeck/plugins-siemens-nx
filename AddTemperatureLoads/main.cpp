@@ -1,3 +1,21 @@
+/*	This plugin adds temperature loads to multiple nodes (based on node ID) in an existing simulation.
+	The temperature data is to be supplied by an external file (1) as described below.
+
+	(1) file 'data.csv' in the same directory as the sim/prt files
+		Format:
+			0,<t0>,<t1>,...,<tN>
+			<node0>,<T0>,<T1>,...,<TN>
+			<node1>,<T0>,<T1>,...,<TN>
+			...
+		The first line lists the time step values (tX), in seconds.
+		The following lines list the node ID (first value), followed by the temperature values for each time step (Tx), in Celcius.
+
+	For each node, the following is added to the simulation:
+	(1) field, "Temperature(xxx)", where 'xxx' is a unique identifier
+		independent variable: time (seconds)
+		dependent variable: temperature (Celcius)
+	(2)	load, "Temperature(xxx)", where 'xxx' is a unique identifier
+*/
 #include "MyNXSupportLib.h"
 
 using namespace NXOpen;
