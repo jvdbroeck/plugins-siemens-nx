@@ -71,8 +71,8 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 				
 				/* ... target node/element */
 				int element_id = node_start_ids[zone_index][region_index] + face_index;
-				MyNXSupportLib::CreateAndAddLoad("Heat Flux", name, table_index+1,
-													MyNXSupportLib::GetElementObject(element_id), "Heat Flux", table);
+				MyNXSupportLib::CreateAndAddLoad("UniformElmFlux", name, table_index+1,
+													MyNXSupportLib::GetElementObject(element_id), "HeatFlux", table);
 			}
 		}
 	}
