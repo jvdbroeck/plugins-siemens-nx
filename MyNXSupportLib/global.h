@@ -17,8 +17,10 @@ extern NXOpen::CAE::SimPart *nx_part;
 extern NXOpen::CAE::SimSimulation *nx_simulation;
 extern NXOpen::CAE::SimSolution *nx_solution;
 extern NXOpen::CAE::SolutionResult *nx_result;
+extern NXOpen::Part *nx_basepart;
 
 void Init();
+bool AssumeBasePart();
 bool AssumePart();
 bool AssumeSimulation();
 bool AssumeSolution();

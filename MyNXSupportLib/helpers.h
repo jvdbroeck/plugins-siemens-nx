@@ -21,8 +21,10 @@ NXOpen::Fields::FieldVariable *GetTimeVariableX();
 NXOpen::Fields::FieldVariable *GetVariableY(std::string vname, std::string mname, NXOpen::Unit *unit);
 NXOpen::CAE::FEModelOccurrence *GetFEModelOccurrence();
 NXOpen::Fields::FieldTable *CreateFieldTable(std::string name, int& index, std::vector<NXOpen::Fields::FieldVariable *> vIndependent, std::vector<NXOpen::Fields::FieldVariable *> vDependent, std::vector<double>& data);
-NXOpen::CAE::SetObject GetElementObject(int element_id);
+NXOpen::CAE::SetObject GetElementObject(int element_id, int face = 3);
 NXOpen::CAE::SetObject GetNodeObject(int node_id);
+NXOpen::CAE::SetObject GetFace(std::string face_id);
+void GetFaceObjects(std::vector<std::string> face_names);
 
 void CreateAndAddLoad(std::string descriptor, std::string name, int label,
 						NXOpen::CAE::SetObject target_object, std::string target_property, NXOpen::Fields::FieldTable *target_table);

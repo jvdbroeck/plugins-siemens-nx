@@ -8,16 +8,28 @@ using namespace NXOpen;
 namespace MyNXSupportLib {
 Session *nx_session;
 ListingWindow *nx_listingwindow;
-CAE::SimPart *nx_part;
+CAE::SimPart *nx_part = NULL;
 CAE::SimSimulation *nx_simulation;
 CAE::SimSolution *nx_solution;
 CAE::SolutionResult *nx_result;
+Part *nx_basepart = NULL;
 
 void Init() {
 	nx_session = Session::GetSession();
 
 	nx_listingwindow = nx_session->ListingWindow();
 	nx_listingwindow->Open();
+}
+
+bool AssumeBasePart() {
+	nx_basepart = nx_session->Parts()->Work();
+
+	if (nx_basepart == NULL) {
+		nx_listingwindow->WriteLine("Base part must be present");
+		return false;
+	}
+
+	return true;
 }
 
 bool AssumePart() {

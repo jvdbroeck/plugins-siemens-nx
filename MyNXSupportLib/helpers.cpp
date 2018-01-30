@@ -8,14 +8,31 @@
 #include <NXOpen/CAE_PropertyTable.hxx>
 #include <NXOpen/CAE_FENode.hxx>
 #include <NXOpen/Fields_FieldExpression.hxx>
+#include <NXOpen/Part.hxx>
+#include <NXOpen/Face.hxx>
+#include <NXOpen/Assemblies_Component.hxx>
+#include <NXOpen/Assemblies_ComponentAssembly.hxx>
+#include <NXOpen/INXObject.hxx>
+#include <NXOpen/BodyCollection.hxx>
+#include <NXOpen/CAE_SimPart.hxx>
 
 using namespace std;
 using namespace NXOpen;
 
 static Fields::FieldManager *cached_fieldmanager = nullptr;
 static CAE::FEModelOccurrence *cached_occurrence = nullptr;
+static Assemblies::Component *cached_component = nullptr;
 
 namespace MyNXSupportLib {
+
+Assemblies::Component *GetComponent() {
+	if (cached_component == nullptr) {
+		string fem_name = "COMPONENT " + string(nx_part->FemPart()->Name().GetText()) + " 1";
+		cached_component = dynamic_cast<Assemblies::Component *>(nx_part->ComponentAssembly()->RootComponent()->FindObject(fem_name));
+	}
+
+	return cached_component;
+}
 
 Fields::FieldManager *GetFieldManager() {
 	/* use caching because this code is HOT */
@@ -47,7 +64,14 @@ CAE::FEModelOccurrence *GetFEModelOccurrence() {
 }
 
 Unit *GetUnit(string name) {
-	return nx_part->UnitCollection()->FindObject(name.c_str());
+	Unit *result = NULL;
+
+	if (nx_part == NULL)
+		result = nx_basepart->UnitCollection()->FindObject(name.c_str());
+	else
+		result = nx_part->UnitCollection()->FindObject(name.c_str());
+
+	return result;
 }
 
 Fields::FieldVariable *GetTimeVariableX() {
@@ -87,11 +111,11 @@ Fields::FieldTable *CreateFieldTable(string name, int& index, vector<Fields::Fie
 	return table;
 }
 
-CAE::SetObject GetElementObject(int element_id) {
+CAE::SetObject GetElementObject(int element_id, int face) {
 	CAE::SetObject obj;
 	obj.Obj = static_cast<TaggedObject *>(GetFEModelOccurrence()->FeelementLabelMap()->GetElement(element_id));
 	obj.SubType = CAE::CaeSetObjectSubType::CaeSetObjectSubTypeElementFace;
-	obj.SubId = 3;
+	obj.SubId = face;
 
 	return obj;
 }
@@ -99,6 +123,15 @@ CAE::SetObject GetElementObject(int element_id) {
 CAE::SetObject GetNodeObject(int node_id) {
 	CAE::SetObject obj;
 	obj.Obj = static_cast<TaggedObject *>(GetFEModelOccurrence()->FenodeLabelMap()->GetNode(node_id));
+	obj.SubType = CAE::CaeSetObjectSubType::CaeSetObjectSubTypeNone;
+	obj.SubId = 0;
+
+	return obj;
+}
+
+CAE::SetObject GetFace(std::string face_id) {
+	CAE::SetObject obj;
+	obj.Obj = dynamic_cast<TaggedObject *>(GetComponent()->FindObject(face_id.c_str()));
 	obj.SubType = CAE::CaeSetObjectSubType::CaeSetObjectSubTypeNone;
 	obj.SubId = 0;
 
@@ -164,15 +197,11 @@ void TimeDataVectorEnsureCorrectInterpolation(std::vector<double>& data, double 
 	}
 
 	{
-		/* element: value(1000) */
 		auto it = data.rbegin();
-		/* element: time(1000) */
 		it++;
 
-		/* element: value(last) */
 		it++;
 		auto insert_before = it;
-		/* element: time(last) */
 		it++;
 
 		auto time_value = *it;

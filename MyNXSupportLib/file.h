@@ -12,6 +12,10 @@ namespace MyNXSupportLib {
 std::string FullFilePath(std::string filename);
 
 std::vector<int> ReadIntData(std::ifstream& input);
+std::vector<double> ReadFloatData(std::ifstream& input);
+void ReadRawData(std::string filename, std::vector<double>& time, std::vector<double>& data);
+void ReadListData(std::string filename, std::vector<int>& data);
+void ReadListData(std::string filename, std::vector<std::string>& data);
 
 template<int N>
 void ReadRawZoneData(std::string filename, std::array<std::vector<double>, N>& time, std::array<std::vector<double>, N>& data, int n_per_zone) {
@@ -25,7 +29,6 @@ void ReadRawZoneData(std::string filename, std::array<std::vector<double>, N>& t
 		/* read lines in groups */
 		int group = 0;
 
-		char *cxt;
 		while (!input.eof()) {
 			std::string line;
 			std::getline(input, line);
@@ -34,15 +37,11 @@ void ReadRawZoneData(std::string filename, std::array<std::vector<double>, N>& t
 			if (line.empty())
 				continue;
 
-			char *cline = new char[line.length()+1];
-			strcpy_s(cline, line.length(), line.c_str());
+			std::string str_line = string(line);
+			auto pos = str_line.find(';');
 
-			char *tok = strtok_s(cline, ";", &cxt);
-			time[group].push_back(stod(string(tok)));
-
-			tok = strtok_s(NULL, ";", &cxt);
-			data[group].push_back(stod(string(tok)));
-
+			time[group].push_back(stod(str_line.substr(0, pos)));
+			data[group].push_back(stod(str_line.substr(pos+1)));
 			if (time[group].size() == n_per_zone)
 				group++;
 		}

@@ -143,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Siemens\NX 11.0\UGOPEN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -153,10 +153,10 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libnxopencpp.lib;libnxopencpp_cae.lib;libnxopencpp_fields.lib;libnxopencpp_assemblies.lib;libnxopencpp_features.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Siemens\NX 11.0\UGOPEN;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,6 +167,7 @@
     <ClCompile Include="file.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="helpers.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="stringhelpers.cpp" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="file.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="helpers.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="MyNXSupportLib.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="stringhelpers.h" />

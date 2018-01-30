@@ -9,6 +9,7 @@
 #include "file.h"
 #include "stringhelpers.h"
 #include "result.h"
+#include "model.h"
 
 #include <uf.h>
 
