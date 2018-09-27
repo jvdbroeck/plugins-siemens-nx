@@ -17,8 +17,15 @@ void ReadRawData(std::string filename, std::vector<double>& time, std::vector<do
 void ReadListData(std::string filename, std::vector<int>& data);
 void ReadListData(std::string filename, std::vector<std::string>& data);
 
+/*
+1:   time;data -\
+2:   time;data  |-> 
+...             |
+X:   time;data -/
+... (N times)
+ */
 template<int N>
-void ReadRawZoneData(std::string filename, std::array<std::vector<double>, N>& time, std::array<std::vector<double>, N>& data, int n_per_zone) {
+void ReadRawZoneData(std::string filename, std::array<std::vector<double>, N>& time, std::array<std::vector<double>, N>& data, int n_per_zone /* X */) {
 	std::ifstream input;
 	input.open(filename);
 
