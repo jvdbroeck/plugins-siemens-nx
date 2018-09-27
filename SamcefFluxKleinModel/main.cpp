@@ -11,8 +11,6 @@ using namespace std;
 #define NR_FACES 50
 // aantal tijdstappen
 #define NR_STEPS 53
-// per face voegen we dit toe aan de tijdstap
-#define DELTA_T_PER_FACE 0.316
 
 int node_start_ids[NR_ZONES][NR_REGIONS] = {
 			/* links verstijver, links dekplaat, rechts verstijver, rechts dekplaat */
@@ -48,6 +46,7 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 	/* 1e NR_STEPS: dekplaat
 	 * 2e NR_STEPS: verstijver */
 	MyNXSupportLib::ReadRawZoneData<NR_ZONES>(MyNXSupportLib::FullFilePath("raw.csv"), time, data, NR_STEPS*2);
+	double delta_t_per_face = time[0][1];
 	
 	/* iterate over the zones: links (verstijver/dekplaat), rechts (verstijver/dekplaat) */
 	for (int region_index = 0; region_index < NR_REGIONS; region_index++) {
@@ -60,7 +59,7 @@ extern DllExport void ufusr( char *parm, int *returnCode, int rlen )
 				for (int step_index = 0; step_index < NR_STEPS; step_index++) {
 					auto time_value = time[zone_index][step_index + NR_STEPS * (region_index % 2)];
 					if (0 < step_index && step_index < NR_STEPS-1)
-						time_value += (face_index * DELTA_T_PER_FACE);
+						time_value += (face_index * delta_t_per_face);
 					node_data.push_back(time_value);
 					node_data.push_back(data[zone_index][step_index]);
 				}
